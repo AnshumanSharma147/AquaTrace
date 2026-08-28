@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-multipart
+pandas
+numpy
+opencv-python-headless
+rasterio
+tifffile
+torch
+torchvision
+requests
+python-dotenv
+global-land-mask
+imagecodecs

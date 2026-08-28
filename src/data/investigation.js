@@ -4,7 +4,7 @@
  */
 
 export const system = {
-  name: 'OilTrace',
+  name: 'AquaTrace',
   tagline: 'Maritime Oil Spill Intelligence',
   status: 'ONLINE',
 }

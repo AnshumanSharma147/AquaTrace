@@ -15,10 +15,6 @@ export default function Header({ system }) {
           <div className="ot-tagline">{system.tagline}</div>
         </div>
       </div>
-      <div className="ot-status">
-        <span className="ot-status-dot" />
-        SYSTEM {system.status}
-      </div>
     </header>
   )
 }
