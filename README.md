@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🌊 AquaTrace (formerly OILTRACE) 🛳️
+# 🌊 AquaTrace 🛳️
 **An End-to-End AI Forensics Platform for Marine Oil Spill Detection & Attribution**
 
 [![React](https://img.shields.io/badge/React-18-blue.svg?style=flat&logo=react)](https://reactjs.org/)
