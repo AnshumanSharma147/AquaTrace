@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api';
+const BASE_URL = `http://${window.location.hostname}:8000/api`;
 
 export const detectSpill = async (imageFile, maskFile = null) => {
   const formData = new FormData();

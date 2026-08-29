@@ -160,6 +160,8 @@ async def detect_oil_spill(
                 transform = src.transform
                 orig_width = src.width
                 orig_height = src.height
+                if transform.is_identity:
+                    raise ValueError("Identity transform detected (TIFF is not georeferenced).")
         except Exception as e:
             # Fallback for non-GeoTIFFs
             print(f"Rasterio could not read transform, falling back: {e}")
@@ -185,8 +187,26 @@ async def detect_oil_spill(
             
         # Process image for model
         img_raw = tiff.imread(img_path)
+        
+        # Normalize shape to (H, W, C)
+        if len(img_raw.shape) == 2:
+            img_raw = np.expand_dims(img_raw, axis=-1)
+        elif len(img_raw.shape) == 3 and img_raw.shape[0] <= 3:
+            # If channels first (e.g. 2, H, W), transpose to (H, W, C)
+            img_raw = np.transpose(img_raw, (1, 2, 0))
+            
+        # Force exactly 2 channels for the U-Net
+        if img_raw.shape[-1] == 1:
+            img_raw = np.concatenate([img_raw, img_raw], axis=-1) # Duplicate channel
+        elif img_raw.shape[-1] > 2:
+            img_raw = img_raw[:, :, :2] # Slice to 2 channels
+            
+        # Normalize pixel values to match exactly how the model was trained
         img = img_raw.astype(np.float32) / 65535.0
+            
         img_resized = cv2.resize(img, (256, 256), interpolation=cv2.INTER_LINEAR)
+        
+        # Now img_resized is guaranteed to be (256, 256, 2)
         img_tensor = np.transpose(img_resized, (2, 0, 1))
         img_tensor = np.expand_dims(img_tensor, axis=0) 
         img_tensor = torch.tensor(img_tensor).to(device)
@@ -219,7 +239,7 @@ async def detect_oil_spill(
         if not predicted_geojson:
              predicted_geojson = {
                 "type": "Feature",
-                "geometry": {"type": "Polygon", "coordinates": [[[-155.65, 19.85], [-155.63, 19.85], [-155.63, 19.83], [-155.65, 19.83], [-155.65, 19.85]]]},
+                "geometry": {"type": "MultiPolygon", "coordinates": [[[[-155.65, 19.85], [-155.63, 19.85], [-155.63, 19.83], [-155.65, 19.83], [-155.65, 19.85]]]]},
                 "properties": {"confidence": 0.0, "note": "No oil detected"}
              }
         

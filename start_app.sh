@@ -23,7 +23,7 @@ pip install -r requirements.txt
 # Start backend in background
 echo "Starting Python ML Backend on http://127.0.0.1:8000..."
 cd python_ml_backend
-uvicorn main:app --reload &
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
 BACKEND_PID=$!
 cd ..
 
@@ -42,7 +42,7 @@ fi
 
 # Start frontend
 echo "Starting React Web App on http://localhost:5173..."
-npm run dev &
+npm run dev -- --host &
 FRONTEND_PID=$!
 
 echo ""

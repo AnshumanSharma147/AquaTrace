@@ -9,7 +9,7 @@ if not exist venv (
     echo Creating Python Virtual Environment...
     python -m venv venv
 )
-start "AquaTrace - Python ML Backend" cmd /k ".\venv\Scripts\activate.bat && pip install -r requirements.txt && cd python_ml_backend && uvicorn main:app --reload"
+start "AquaTrace - Python ML Backend" cmd /k ".\venv\Scripts\activate.bat && pip install -r requirements.txt && cd python_ml_backend && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
 
 echo.
 echo [2/2] Checking React Web Frontend dependencies...
@@ -17,7 +17,7 @@ if not exist node_modules (
     echo Installing Node Modules...
     npm install
 )
-start "AquaTrace - React Web App" cmd /k "npm run dev"
+start "AquaTrace - React Web App" cmd /k "npm run dev -- --host"
 
 echo.
 echo Both services are launching! 
